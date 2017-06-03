@@ -1,0 +1,30 @@
+version: '3'
+services:
+  jira:
+    build: .
+    container_name: "jira-server"
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    links:
+      - db
+  db:
+    image: postgres:9.4
+    container_name: "jira-db"
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: jira
+      POSTGRES_INITDB_ARGS: --encoding=UNICODE --lc-collate=C --lc-ctype=C -T template0
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
